@@ -80,7 +80,7 @@ resource "aws_launch_template" "main" {
   image_id      = var.ami_id != "" ? var.ami_id : data.aws_ami.amazon_linux_2.id
   instance_type = var.instance_type
 
-  vpc_security_group_ids = [aws_security_group.ec2]
+  vpc_security_group_ids = [aws_security_group.ec2.id]
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2.name

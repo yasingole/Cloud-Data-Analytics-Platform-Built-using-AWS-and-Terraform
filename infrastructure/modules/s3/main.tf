@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "raw_data" {
   bucket = var.project_name
 
   tags = {
-    Name        = "${var.project_name}-raw-data"
+    Name        = "${var.project_name}-raw-data-${random_string.suffix.result}"
     Environment = var.environment
   }
 }
@@ -20,7 +20,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "raw_data" {
 
 #Processed data bucket
 resource "aws_s3_bucket" "processed_data" {
-  bucket = "${var.project_name}-processed-data-${var.environment}"
+  bucket = "${var.project_name}-processed-data-${var.environment}-${random_string.suffix.result}"
 
   tags = {
     Name        = "${var.project_name}-processed-data"
@@ -40,7 +40,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "processed_data" {
 
 #Website bucket
 resource "aws_s3_bucket" "website" {
-  bucket = "${var.project_name}-website-${var.environment}"
+  bucket = "${var.project_name}-website-${var.environment}-${random_string.suffix.result}"
 
   tags = {
     Name        = "${var.project_name}-website"

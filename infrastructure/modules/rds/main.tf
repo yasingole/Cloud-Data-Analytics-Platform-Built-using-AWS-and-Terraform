@@ -6,6 +6,7 @@ resource "aws_db_subnet_group" "main" {
 
   tags = {
     Name = "${var.project_name}"
+    Environment = var.environment
   }
 }
 #SG for RDS
@@ -31,6 +32,7 @@ resource "aws_security_group" "rds" {
 
   tags = {
     Name = "${var.project_name}-rds-sg"
+    Environment = var.environment
   }
 }
 
@@ -50,6 +52,7 @@ resource "aws_ssm_parameter" "db_password" {
 
   tags = {
     Name = "${var.project_name}-db-password"
+    Environment = var.environment
   }
 }
 
@@ -62,6 +65,7 @@ resource "aws_ssm_parameter" "db_username" {
 
   tags = {
     Name = "${var.project_name}-db-username"
+    Environment = var.environment
   }
 }
 #Storing database name in ssm
@@ -100,6 +104,7 @@ resource "aws_db_instance" "main" {
 
   tags = {
     Name = "${var.project_name}-db"
+    Environment = var.environment
   }
 }
 

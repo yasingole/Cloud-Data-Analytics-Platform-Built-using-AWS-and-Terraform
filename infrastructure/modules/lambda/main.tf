@@ -17,6 +17,7 @@ resource "aws_iam_role" "lambda" {
 
   tags = {
     Name = "${var.project_name}-lambda-role"
+    Environment = var.environment
   }
 }
 
@@ -43,6 +44,7 @@ resource "aws_lambda_function" "data_validation" {
 
   tags = {
     Name = "${var.project_name}-data-validation-lambda"
+    Environment = var.environment
   }
 }
 
@@ -70,6 +72,7 @@ resource "aws_lambda_function" "api" {
 
   tags = {
     Name = "${var.project_name}-api-lambda"
+    Environment = var.environment
   }
 }
 

@@ -13,6 +13,7 @@ resource "aws_internet_gateway" "igw" {
 
   tags = {
     Name = "${var.project_name}-igw"
+    Environment = var.environment
   }
 }
 
@@ -26,6 +27,8 @@ resource "aws_subnet" "public_subnet" {
 
   tags = {
     Name = "${var.project_name}-public-subnet-${count.index + 1}"
+    Environment = var.environment
+
   }
 }
 
@@ -40,6 +43,7 @@ resource "aws_subnet" "private_app_subnet" {
 
   tags = {
     Name = "${var.project_name}-private-app-subnet-${count.index + 1}"
+    Environment = var.environment
   }
 }
 
@@ -54,6 +58,7 @@ resource "aws_subnet" "private_database_subnet" {
 
   tags = {
     Name = "${var.project_name}-private-databaseb-subnet-${count.index + 1}"
+    Environment = var.environment
   }
 }
 
@@ -64,6 +69,7 @@ resource "aws_eip" "nat" {
 
   tags = {
     Name = "${var.project_name}-nat-eip"
+    Environment = var.environment
   }
 }
 
@@ -76,6 +82,7 @@ resource "aws_nat_gateway" "main" {
 
   tags = {
     Name = "${var.project_name}-nat-gateway"
+    Environment = var.environment
   }
 
   depends_on = [aws_internet_gateway.igw]
@@ -93,6 +100,7 @@ resource "aws_route_table" "public" {
 
   tags = {
     Name = "${var.project_name}-public-route-table"
+    Environment = var.environment
   }
 }
 #Private RT
@@ -108,6 +116,7 @@ resource "aws_route_table" "private" {
 
   tags = {
     Name = "${var.project_name}-private-route-table"
+    Environment = var.environment
   }
 }
 

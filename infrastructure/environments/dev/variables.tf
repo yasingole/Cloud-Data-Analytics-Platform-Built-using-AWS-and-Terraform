@@ -112,7 +112,7 @@ variable "db_instance_class" {
 variable "db_name" {
   description = "Name of the database to create"
   type        = string
-  default     = ""
+  default     = "healthcare_data"
 }
 
 variable "db_username" {

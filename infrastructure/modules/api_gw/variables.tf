@@ -53,3 +53,7 @@ variable "api_key_required_endpoints" {
   type        = list(string)
   default     = []
 }
+
+variable "stage_name" {
+  
+}

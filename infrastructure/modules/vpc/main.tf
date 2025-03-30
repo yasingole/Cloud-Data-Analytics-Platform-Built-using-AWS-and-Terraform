@@ -18,10 +18,10 @@ resource "aws_internet_gateway" "igw" {
 
 #Public subnets
 resource "aws_subnet" "public_subnet" {
-  count = length(var.public_subnet_cidrs)
-  vpc_id = aws_vpc.main.id
-  cidr_block = var.public_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index]
+  count                   = length(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
 
   tags = {
@@ -31,10 +31,10 @@ resource "aws_subnet" "public_subnet" {
 
 #Private app subnets
 resource "aws_subnet" "private_app_subnet" {
-  count = length(var.private_app_subnet_cidrs)
-  vpc_id = aws_vpc.main.id
-  cidr_block = var.private_app_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index]
+  count                   = length(var.private_app_subnet_cidrs)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_app_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = false
 
 
@@ -45,10 +45,10 @@ resource "aws_subnet" "private_app_subnet" {
 
 #Private database subnets
 resource "aws_subnet" "private_database_subnet" {
-  count = length(var.private_db_subnet_cidrs)
-  vpc_id = aws_vpc.main.id
-  cidr_block = var.private_db_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index]
+  count                   = length(var.private_db_subnet_cidrs)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_db_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = false
 
 
@@ -59,7 +59,7 @@ resource "aws_subnet" "private_database_subnet" {
 
 #EIP
 resource "aws_eip" "nat" {
-  count = var.create_nat_gateway ? 1:0
+  count  = var.create_nat_gateway ? 1 : 0
   domain = "vpc"
 
   tags = {
@@ -101,7 +101,7 @@ resource "aws_route_table" "private" {
   dynamic "route" {
     for_each = var.create_nat_gateway ? [1] : [0]
     content {
-      cidr_block = "0.0.0.0/0"
+      cidr_block     = "0.0.0.0/0"
       nat_gateway_id = aws_nat_gateway.main[0].id
     }
   }
@@ -114,21 +114,21 @@ resource "aws_route_table" "private" {
 #Route table associations
 #Public subnet associations
 resource "aws_route_table_association" "public_association" {
-  count = length(var.public_subnet_cidrs)
-  subnet_id = aws_subnet.public_subnet[count.index].id
+  count          = length(var.public_subnet_cidrs)
+  subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public.id
 }
 
 #Private app subnet associations
 resource "aws_route_table_association" "private_app_association" {
-  count = length(var.private_app_subnet_cidrs)
-  subnet_id = aws_subnet.private_app_subnet[count.index].id
+  count          = length(var.private_app_subnet_cidrs)
+  subnet_id      = aws_subnet.private_app_subnet[count.index].id
   route_table_id = aws_route_table.private.id
 }
 
 #Private database subnet associations
 resource "aws_route_table_association" "private_db_association" {
-  count = length(var.private_db_subnet_cidrs)
-  subnet_id = aws_subnet.private_database_subnet[count.index].id
+  count          = length(var.private_db_subnet_cidrs)
+  subnet_id      = aws_subnet.private_database_subnet[count.index].id
   route_table_id = aws_route_table.private.id
 }

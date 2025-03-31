@@ -226,3 +226,55 @@ variable "enable_api_key" {
   type        = bool
   default     = false
 }
+
+# Monitoring Configuration
+variable "notification_email" {
+  description = "Email address to receive monitoring alerts"
+  type        = string
+  default     = null
+}
+
+# Monitoring Thresholds
+variable "cpu_threshold" {
+  description = "CPU utilization threshold for triggering alarms"
+  type        = number
+  default     = 80
+}
+
+variable "error_threshold" {
+  description = "Error count threshold for Lambda and other services"
+  type        = number
+  default     = 1
+}
+
+# Specific Monitoring Toggles
+variable "monitor_rds" {
+  description = "Enable monitoring for RDS instances"
+  type        = bool
+  default     = true
+}
+
+variable "monitor_lambdas" {
+  description = "Enable monitoring for Lambda functions"
+  type        = bool
+  default     = true
+}
+
+variable "monitor_ec2" {
+  description = "Enable monitoring for EC2 Auto Scaling Group"
+  type        = bool
+  default     = true
+}
+
+variable "monitor_s3" {
+  description = "Enable monitoring for S3 buckets"
+  type        = bool
+  default     = true
+}
+
+# Logging and Retention
+variable "log_retention_days" {
+  description = "Number of days to retain logs for monitoring resources"
+  type        = number
+  default     = 30
+}

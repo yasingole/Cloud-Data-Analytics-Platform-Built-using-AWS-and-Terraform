@@ -65,7 +65,6 @@ resource "aws_subnet" "private_database_subnet" {
 #EIP
 resource "aws_eip" "nat" {
   count  = var.create_nat_gateway ? 1 : 0
-  domain = "vpc"
 
   tags = {
     Name = "${var.project_name}-nat-eip"

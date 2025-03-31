@@ -203,7 +203,7 @@ variable "stage_name" {
   default     = "dev"
 }
 
-variable "log_retention_days" {
+variable "log_retention_days_apigw" {
   description = "Number of days to retain API Gateway logs"
   type        = number
   default     = 30
@@ -273,7 +273,7 @@ variable "monitor_s3" {
 }
 
 # Logging and Retention
-variable "log_retention_days" {
+variable "log_retention_days_cloudwatch" {
   description = "Number of days to retain logs for monitoring resources"
   type        = number
   default     = 30

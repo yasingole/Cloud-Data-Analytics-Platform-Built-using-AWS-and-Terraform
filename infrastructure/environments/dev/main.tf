@@ -111,14 +111,14 @@ module "api_gw" {
 
   # Optional parameters
   stage_name             = var.environment
-  log_retention_days     = var.log_retention_days
+  log_retention_days     = var.log_retention_days_apigw
   cors_allow_origins     = var.cors_allow_origins
   cors_allow_methods     = var.cors_allow_methods
   enable_api_key         = var.enable_api_key
 }
 
 module "monitoring" {
-  source = "../../modules/monitoring"
+  source = "../../modules/cloudwatch"
 
   project_name = var.project_name
   environment  = var.environment

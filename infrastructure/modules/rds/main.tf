@@ -1,7 +1,7 @@
 #Database subnets group
 resource "aws_db_subnet_group" "main" {
   name        = var.project_name
-  description = "Database subnet froup for ${var.project_name}"
+  description = "database subnet froup for ${var.project_name}"
   subnet_ids  = var.subnet_ids
 
   tags = {

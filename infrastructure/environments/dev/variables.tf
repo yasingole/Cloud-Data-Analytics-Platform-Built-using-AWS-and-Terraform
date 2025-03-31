@@ -59,10 +59,6 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "aws_profile" {
-  description = "AWS CLI profile to use"
-  type        = string
-}
 
 # EC2 Variables
 variable "instance_type" {

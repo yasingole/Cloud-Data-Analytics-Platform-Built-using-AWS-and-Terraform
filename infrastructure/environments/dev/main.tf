@@ -17,13 +17,13 @@ terraform {
 data "archive_file" "validation_lambda" {
   type        = "zip"
   output_path = "${path.module}/lambda_packages/validation.zip"
-  source_file = "${path.module}/../../src/data-processing/validation.py"
+  source_file = "${path.module}/../../../src/data-processing/validation.py"
 }
 
 data "archive_file" "api_lambda" {
   type        = "zip"
   output_path = "${path.module}/lambda_packages/api.zip"
-  source_file = "${path.module}/../../src/api/api.py"
+  source_file = "${path.module}/../../../src/api/api.py"
 }
 
 #Modules

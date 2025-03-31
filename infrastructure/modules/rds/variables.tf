@@ -1,5 +1,3 @@
-# infrastructure/modules/rds/variables.tf
-
 variable "project_name" {
   description = "Name of the project to use in resource naming"
   type        = string

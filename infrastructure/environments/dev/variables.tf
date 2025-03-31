@@ -164,16 +164,6 @@ variable "deletion_protection" {
 }
 
 #Lambda variables
-variable "validation_zip_path" {
-  description = "Path to the ZIP file containing the data validation Lambda code"
-  type        = string
-}
-
-variable "api_zip_path" {
-  description = "Path to the ZIP file containing the API Lambda code"
-  type        = string
-}
-
 variable "lambda_memory_size" {
   description = "Memory size for Lambda functions (in MB)"
   type        = number

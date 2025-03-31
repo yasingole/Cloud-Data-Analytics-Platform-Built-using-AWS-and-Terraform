@@ -116,3 +116,40 @@ module "api_gw" {
   cors_allow_methods     = var.cors_allow_methods
   enable_api_key         = var.enable_api_key
 }
+
+module "monitoring" {
+  source = "../../modules/monitoring"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  #RDS Monitoring
+  monitor_rds     = true
+  rds_instance_id = module.rds.db_instance_id
+
+  #Lambda Monitoring
+  monitor_lambdas        = true
+  lambda_function_names = [
+    module.lambda.data_validation_lambda_name,
+    module.lambda.api_lambda_name
+  ]
+
+  #EC2 Monitoring
+  monitor_ec2   = true
+  asg_name      = module.ec2.autoscaling_group_name
+
+  #S3 Monitoring
+  monitor_s3 = true
+  s3_bucket_names = [
+    module.s3.raw_data_bucket,
+    module.s3.processed_data_bucket,
+    module.s3.website_bucket
+  ]
+
+  #Email Notification
+  notification_email = var.notification_email
+
+  #Customisable Thresholds
+  cpu_threshold    = 80
+  error_threshold  = 1
+}

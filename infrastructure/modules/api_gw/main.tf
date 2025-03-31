@@ -196,6 +196,7 @@ resource "aws_cloudwatch_log_group" "api_gateway" {
   }
 }
 
+#IAM
 resource "aws_iam_role" "api_gateway_cloudwatch" {
   name = "${var.project_name}-${var.environment}-api-gateway-cloudwatch"
 
@@ -235,4 +236,13 @@ resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
       }
     ]
   })
+}
+
+# Lambda invocation permission for API Gateway
+resource "aws_lambda_permission" "api_gateway" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*/*"
 }

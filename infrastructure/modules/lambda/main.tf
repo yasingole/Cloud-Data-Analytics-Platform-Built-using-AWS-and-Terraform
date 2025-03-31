@@ -120,3 +120,126 @@ resource "aws_cloudwatch_log_group" "api" {
     Environment = var.environment
   }
 }
+
+#IAM
+#CloudWatch Logs policy
+resource "aws_iam_policy" "lambda_logs" {
+  name        = "${var.project_name}-${var.environment}-lambda-logs"
+  description = "IAM policy for logging from Lambda functions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:logs:*:*:log-group:/aws/lambda/${var.project_name}-*"
+      }
+    ]
+  })
+}
+
+#S3 access policy
+resource "aws_iam_policy" "lambda_s3" {
+  name        = "${var.project_name}-${var.environment}-lambda-s3"
+  description = "IAM policy for S3 access from Lambda functions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.raw_data_bucket_arn,
+          "${var.raw_data_bucket_arn}/*",
+          var.processed_data_bucket_arn,
+          "${var.processed_data_bucket_arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+#SSM Parameter Store access policy
+resource "aws_iam_policy" "lambda_ssm" {
+  name        = "${var.project_name}-${var.environment}-lambda-ssm"
+  description = "IAM policy for SSM Parameter Store access from Lambda functions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:ssm:*:*:parameter/${var.project_name}/${var.environment}/*"
+      }
+    ]
+  })
+}
+
+# VPC access policy (only needed FOR Lambda functions that need to access VPC resources like RDS)
+resource "aws_iam_policy" "lambda_vpc" {
+  count       = var.enable_rds_access ? 1 : 0
+  name        = "${var.project_name}-${var.environment}-lambda-vpc"
+  description = "IAM policy for VPC access from Lambda functions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeVpcs"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach policies to Lambda role
+resource "aws_iam_role_policy_attachment" "lambda_logs" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda_logs.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_s3" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda_s3.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_ssm" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda_ssm.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_vpc" {
+  count      = var.enable_rds_access ? 1 : 0
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda_vpc[0].arn
+}
+
+# Basic Lambda execution role (includes CloudWatch permissions)
+resource "aws_iam_role_policy_attachment" "lambda_basic" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}

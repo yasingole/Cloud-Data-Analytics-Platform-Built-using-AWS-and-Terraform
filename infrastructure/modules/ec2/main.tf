@@ -151,3 +151,116 @@ resource "aws_autoscaling_group" "main" {
     propagate_at_launch = true
   }
 }
+
+#IAM
+#S3 access policy
+resource "aws_iam_policy" "ec2_s3_access" {
+  name        = "${var.project_name}-${var.environment}-ec2-s3-access"
+  description = "Policy for EC2 instances to access S3 buckets"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.raw_data_bucket_arn,
+          "${var.raw_data_bucket_arn}/*",
+          var.processed_data_bucket_arn,
+          "${var.processed_data_bucket_arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+#CloudWatch Logs policy
+resource "aws_iam_policy" "ec2_cloudwatch_logs" {
+  name        = "${var.project_name}-${var.environment}-ec2-cloudwatch-logs"
+  description = "Policy for EC2 instances to write CloudWatch logs"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:logs:*:*:log-group:/aws/ec2/${var.project_name}-*"
+      }
+    ]
+  })
+}
+
+#CloudWatch Metrics policy
+resource "aws_iam_policy" "ec2_cloudwatch_metrics" {
+  name        = "${var.project_name}-${var.environment}-ec2-cloudwatch-metrics"
+  description = "Policy for EC2 instances to write CloudWatch metrics"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "cloudwatch:PutMetricData",
+          "cloudwatch:GetMetricData",
+          "cloudwatch:GetMetricStatistics"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+#SSM Parameter Store policy
+resource "aws_iam_policy" "ec2_ssm_parameters" {
+  name        = "${var.project_name}-${var.environment}-ec2-ssm-parameters"
+  description = "Policy for EC2 instances to access SSM parameters"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:ssm:*:*:parameter/${var.project_name}/${var.environment}/*"
+      }
+    ]
+  })
+}
+
+#Attach policies to EC2 role
+resource "aws_iam_role_policy_attachment" "ec2_s3_access" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = aws_iam_policy.ec2_s3_access.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_cloudwatch_logs" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = aws_iam_policy.ec2_cloudwatch_logs.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_cloudwatch_metrics" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = aws_iam_policy.ec2_cloudwatch_metrics.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_ssm_parameters" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = aws_iam_policy.ec2_ssm_parameters.arn
+}

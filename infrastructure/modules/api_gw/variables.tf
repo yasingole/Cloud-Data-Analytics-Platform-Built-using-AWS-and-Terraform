@@ -8,6 +8,12 @@ variable "environment" {
   type        = string
 }
 
+variable "stage_name" {
+  description = "Name of the API Gateway deployment stage"
+  type        = string
+  default     = "dev"
+}
+
 variable "lambda_invoke_arn" {
   description = "ARN of the Lambda function to invoke"
   type        = string
@@ -52,8 +58,4 @@ variable "api_key_required_endpoints" {
   description = "List of endpoint paths that require an API key (if enable_api_key is true)"
   type        = list(string)
   default     = []
-}
-
-variable "stage_name" {
-  
 }

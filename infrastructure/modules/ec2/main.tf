@@ -98,7 +98,7 @@ resource "aws_launch_template" "main" {
     }
   }
 
-  user_data = base64decode(<<-EOF
+  user_data = base64encode(<<-EOF
     #!/bin/bash
     # Install minimum requirements for Ansible
     yum update -y
@@ -111,9 +111,6 @@ resource "aws_launch_template" "main" {
     REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/region)
 
     echo "Prepared for Ansible management" > /var/log/user-data-complete.log
-
-
-
   EOF
   )
 

@@ -159,6 +159,10 @@ resource "aws_api_gateway_deployment" "main" {
   }
 }
 
+resource "aws_api_gateway_account" "main" {
+  cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch.arn
+}
+
 resource "aws_api_gateway_stage" "main" {
   deployment_id = aws_api_gateway_deployment.main.id
   rest_api_id   = aws_api_gateway_rest_api.main.id
@@ -190,10 +194,6 @@ resource "aws_cloudwatch_log_group" "api_gateway" {
     Name        = "${var.project_name}-api-gateway-logs"
     Environment = var.environment
   }
-}
-
-resource "aws_api_gateway_account" "main" {
-  cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch.arn
 }
 
 resource "aws_iam_role" "api_gateway_cloudwatch" {

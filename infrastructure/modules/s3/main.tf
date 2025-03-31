@@ -1,12 +1,13 @@
 #Raw data bucket
 resource "aws_s3_bucket" "raw_data" {
-  bucket = var.project_name
+  bucket = "${var.project_name}-raw-data-${random_string.suffix.result}"
 
   tags = {
     Name        = "${var.project_name}-raw-data-${random_string.suffix.result}"
     Environment = var.environment
   }
 }
+
 #Enable sse for raw data bucket
 resource "aws_s3_bucket_server_side_encryption_configuration" "raw_data" {
   bucket = aws_s3_bucket.raw_data.id

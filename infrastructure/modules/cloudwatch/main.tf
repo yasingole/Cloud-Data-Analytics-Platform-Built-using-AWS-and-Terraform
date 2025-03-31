@@ -14,7 +14,8 @@ resource "aws_sns_topic_subscription" "email_subscription" {
 
 #RDS Monitoring Alarms
 resource "aws_cloudwatch_metric_alarm" "rds_cpu_utilization" {
-  count               = var.monitor_rds && var.rds_instance_id != null ? 1 : 0
+  count = var.monitor_rds ? 1 : 0
+
   alarm_name          = "${var.project_name}-${var.environment}-rds-high-cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
@@ -24,16 +25,17 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_utilization" {
   statistic           = "Average"
   threshold           = var.cpu_threshold
 
-  dimensions = {
+  dimensions = var.rds_instance_id != null && var.rds_instance_id != "" ? {
     DBInstanceIdentifier = var.rds_instance_id
-  }
+  } : null
 
   alarm_description = "RDS CPU utilization is above ${var.cpu_threshold}%"
   alarm_actions     = var.notification_email != null ? [aws_sns_topic.monitoring_alerts[0].arn] : []
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_free_storage" {
-  count               = var.monitor_rds && var.rds_instance_id != null ? 1 : 0
+  count = var.monitor_rds ? 1 : 0
+
   alarm_name          = "${var.project_name}-${var.environment}-rds-low-storage"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "2"
@@ -43,9 +45,9 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_storage" {
   statistic           = "Average"
   threshold           = 5000000000  # 5GB
 
-  dimensions = {
+  dimensions = var.rds_instance_id != null && var.rds_instance_id != "" ? {
     DBInstanceIdentifier = var.rds_instance_id
-  }
+  } : null
 
   alarm_description = "RDS free storage is below 5GB"
   alarm_actions     = var.notification_email != null ? [aws_sns_topic.monitoring_alerts[0].arn] : []

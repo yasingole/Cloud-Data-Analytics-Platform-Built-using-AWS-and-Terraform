@@ -82,3 +82,15 @@ variable "deletion_protection" {
   type        = bool
   default     = true
 }
+
+variable "rds_instance_id" {
+  description = "RDS instance ID to monitor"
+  type        = string
+  default     = null
+}
+
+variable "monitor_rds" {
+  description = "Enable RDS monitoring"
+  type        = bool
+  default     = false
+}

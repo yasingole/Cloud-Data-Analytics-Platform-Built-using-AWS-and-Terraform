@@ -150,7 +150,7 @@ resource "aws_autoscaling_group" "main" {
 
   tag {
     key                 = "AnsibleGroup"
-    value               = "healthcare_processors"
+    value               = "processors"
     propagate_at_launch = true
   }
 }

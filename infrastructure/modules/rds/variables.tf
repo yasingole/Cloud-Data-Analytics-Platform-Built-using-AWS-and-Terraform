@@ -52,7 +52,7 @@ variable "instance_class" {
 variable "db_name" {
   description = "Name of the database to create"
   type        = string
-  default     = "healthcare_data"
+  default     = ""
 }
 
 variable "db_username" {

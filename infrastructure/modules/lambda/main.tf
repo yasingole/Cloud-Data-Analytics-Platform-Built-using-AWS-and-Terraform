@@ -95,6 +95,9 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     filter_prefix       = "uploads/"
     filter_suffix       = ".csv"
   }
+
+  #permission created before the notification
+  depends_on = [aws_lambda_permission.allow_s3]
 }
 
 #CloudWatch log groups

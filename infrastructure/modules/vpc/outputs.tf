@@ -1,44 +1,44 @@
 output "vpc_id" {
-  description = "The ID of the VPC"
+  description = "VPC ID"
   value       = aws_vpc.main.id
 }
 
 output "vpc_cidr_block" {
-  description = "The CIDR block of the VPC"
+  description = "CIDR block of VPC"
   value       = aws_vpc.main.cidr_block
 }
 
 output "public_subnet_ids" {
-  description = "List of IDs of public subnets"
+  description = "List of public subnet IDs"
   value       = aws_subnet.public_subnet[*].id
 }
 
 output "private_app_subnet_ids" {
-  description = "List of IDs of private application subnets"
+  description = "List of private app subnet IDs"
   value       = aws_subnet.private_app_subnet[*].id
 }
 
 output "private_db_subnet_ids" {
-  description = "List of IDs of private database subnets"
+  description = "List of private DB subnet IDs"
   value       = aws_subnet.private_database_subnet[*].id
 }
 
 output "public_route_table_id" {
-  description = "ID of the public route table"
+  description = "Public route table ID"
   value       = aws_route_table.public.id
 }
 
 output "private_route_table_id" {
-  description = "ID of the private route table"
+  description = "Private route table ID"
   value       = aws_route_table.private.id
 }
 
 output "nat_gateway_id" {
-  description = "ID of the NAT Gateway (if created)"
+  description = "ID of the NAT Gateway (optional)"
   value       = var.create_nat_gateway ? aws_nat_gateway.main[0].id : null
 }
 
 output "internet_gateway_id" {
-  description = "ID of the Internet Gateway"
+  description = "Internet Gateway ID"
   value       = aws_internet_gateway.igw.id
 }

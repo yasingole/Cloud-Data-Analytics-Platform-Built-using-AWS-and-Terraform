@@ -9,31 +9,31 @@ variable "environment" {
 }
 
 variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
+  description = "VPC CIDR block"
   type        = string
   default     = "10.0.0.0/16"
 }
 
 variable "availability_zones" {
-  description = "Availability zones to use"
+  description = "Availability zones"
   type        = list(string)
   default     = ["eu-west-2a", "eu-west-2b"]
 }
 
 variable "public_subnet_cidrs" {
-  description = "CIDR blocks for public subnets"
+  description = "Public subnets CIDRs"
   type        = list(string)
   default     = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "private_app_subnet_cidrs" {
-  description = "CIDR blocks for private app subnets"
+  description = "Private subnets CIDRs"
   type        = list(string)
   default     = ["10.0.3.0/24", "10.0.4.0/24"]
 }
 
 variable "private_db_subnet_cidrs" {
-  description = "CIDR blocks for private database subnets"
+  description = "Private database subnets CIDRs"
   type        = list(string)
   default     = ["10.0.5.0/24", "10.0.6.0/24"]
 }

@@ -73,7 +73,6 @@ resource "aws_eip" "nat" {
 }
 
 #NGW
-
 resource "aws_nat_gateway" "main" {
   count         = var.create_nat_gateway ? 1 : 0
   allocation_id = aws_eip.nat[0].id

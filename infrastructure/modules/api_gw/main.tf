@@ -1,4 +1,4 @@
-#Main API Gateway configuration
+# Main API Gateway configuration
 resource "aws_api_gateway_rest_api" "main" {
   name        = "${var.project_name}-api"
   description = "API for data platform"
@@ -12,7 +12,7 @@ resource "aws_api_gateway_rest_api" "main" {
   }
 }
 
-#API Resources
+# API Resources
 resource "aws_api_gateway_resource" "api" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
@@ -25,8 +25,25 @@ resource "aws_api_gateway_resource" "summary" {
   path_part   = "summary"
 }
 
-#Methods and Integrations
-#Summary endpoint
+# ------------------------------
+# Additional Resources can be added here
+# For example:
+# resource "aws_api_gateway_resource" "age_prevalence" {
+#   rest_api_id = aws_api_gateway_rest_api.main.id
+#   parent_id   = aws_api_gateway_resource.api.id
+#   path_part   = "age-prevalence"
+# }
+#
+# resource "aws_api_gateway_resource" "bmi_prevalence" {
+#   rest_api_id = aws_api_gateway_rest_api.main.id
+#   parent_id   = aws_api_gateway_resource.api.id
+#   path_part   = "bmi-prevalence"
+# }
+# ------------------------------
+
+# Methods and Integrations
+
+# Summary endpoint
 resource "aws_api_gateway_method" "summary" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
   resource_id   = aws_api_gateway_resource.summary.id
@@ -43,8 +60,29 @@ resource "aws_api_gateway_integration" "summary" {
   uri                     = var.lambda_invoke_arn
 }
 
-#CORS Configuration
-#CORS for Summary endpoint
+# ------------------------------
+# Additional methods and integrations can be added here
+# For example:
+# resource "aws_api_gateway_method" "age_prevalence" {
+#   rest_api_id   = aws_api_gateway_rest_api.main.id
+#   resource_id   = aws_api_gateway_resource.age_prevalence.id
+#   http_method   = "GET"
+#   authorization = "NONE"
+# }
+#
+# resource "aws_api_gateway_integration" "age_prevalence" {
+#   rest_api_id             = aws_api_gateway_rest_api.main.id
+#   resource_id             = aws_api_gateway_resource.age_prevalence.id
+#   http_method             = aws_api_gateway_method.age_prevalence.http_method
+#   integration_http_method = "POST"
+#   type                    = "AWS_PROXY"
+#   uri                     = var.lambda_invoke_arn
+# }
+# ------------------------------
+
+# CORS Configuration
+
+# CORS for Summary endpoint
 resource "aws_api_gateway_method" "summary_options" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
   resource_id   = aws_api_gateway_resource.summary.id
@@ -91,11 +129,27 @@ resource "aws_api_gateway_integration_response" "summary_options" {
   }
 }
 
-#Deployment and Stage
+# ------------------------------
+# Additional CORS configurations can be added here for new endpoints
+# For example:
+# resource "aws_api_gateway_method" "age_prevalence_options" {
+#   rest_api_id   = aws_api_gateway_rest_api.main.id
+#   resource_id   = aws_api_gateway_resource.age_prevalence.id
+#   http_method   = "OPTIONS"
+#   authorization = "NONE"
+# }
+#
+# ... [integration, method_response, integration_response for age_prevalence]
+# ------------------------------
+
+# Deployment and Stage
 resource "aws_api_gateway_deployment" "main" {
   depends_on = [
     aws_api_gateway_integration.summary,
     aws_api_gateway_integration.summary_options
+    # Include other integrations here as they are created
+    # aws_api_gateway_integration.age_prevalence,
+    # aws_api_gateway_integration.age_prevalence_options,
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id
@@ -131,7 +185,7 @@ resource "aws_api_gateway_stage" "main" {
   }
 }
 
-#CloudWatch Logging
+# CloudWatch Logging
 resource "aws_cloudwatch_log_group" "api_gateway" {
   name              = "/aws/apigateway/${var.project_name}-${var.environment}"
   retention_in_days = var.log_retention_days != null ? var.log_retention_days : 30
@@ -183,8 +237,9 @@ resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
     ]
   })
 }
+# Add to infrastructure/modules/api_gw/main.tf
 
-#Lambda invocation permission for API Gateway
+# Lambda invocation permission for API Gateway
 resource "aws_lambda_permission" "api_gateway" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"

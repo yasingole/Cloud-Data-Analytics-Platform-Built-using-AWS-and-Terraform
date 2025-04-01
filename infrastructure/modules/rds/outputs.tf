@@ -1,10 +1,10 @@
 output "db_instance_id" {
-  description = "ID of the RDS instance"
+  description = "RDS instance ID"
   value       = aws_db_instance.main.id
 }
 
 output "db_instance_endpoint" {
-  description = "Endpoint of the RDS instance"
+  description = "Endpoint of RDS instance"
   value       = aws_db_instance.main.endpoint
 }
 
@@ -19,22 +19,22 @@ output "db_instance_port" {
 }
 
 output "db_subnet_group_id" {
-  description = "ID of the DB subnet group"
+  description = "ID of DB subnet group"
   value       = aws_db_subnet_group.main.id
 }
 
 output "db_subnet_group_arn" {
-  description = "ARN of the DB subnet group"
+  description = "ARN of DB subnet group"
   value       = aws_db_subnet_group.main.arn
 }
 
 output "security_group_id" {
-  description = "ID of the security group for the RDS instance"
+  description = "ID of the sg for RDS instance"
   value       = aws_security_group.rds.id
 }
 
 output "security_group_name" {
-  description = "Name of the security group for the RDS instance"
+  description = "Name of the sg for the RDS instance"
   value       = aws_security_group.rds.name
 }
 

@@ -31,13 +31,13 @@ variable "processed_data_bucket_name" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID where the Lambda functions will be deployed (if applicable)"
+  description = "VPC ID where the Lambda functions will be deployed"
   type        = string
   default     = null
 }
 
 variable "subnet_ids" {
-  description = "List of subnet IDs where the Lambda functions will be deployed (if applicable)"
+  description = "List of subnet IDs where the Lambda functions will be deployed"
   type        = list(string)
   default     = null
 }

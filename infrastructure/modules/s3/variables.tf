@@ -1,5 +1,5 @@
 variable "project_name" {
-  description = "Name of the project to use in resource naming"
+  description = "Namr of the project"
   type        = string
 }
 

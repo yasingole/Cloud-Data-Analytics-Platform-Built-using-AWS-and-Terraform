@@ -1,26 +1,3 @@
-#IAM role for lambda functions
-resource "aws_iam_role" "lambda" {
-  name = "${var.project_name}-lambda-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name = "${var.project_name}-lambda-role"
-    Environment = var.environment
-  }
-}
-
 #Data validation laambda function
 resource "aws_lambda_function" "data_validation" {
   function_name = "${var.project_name}-data-validation"
@@ -121,7 +98,29 @@ resource "aws_cloudwatch_log_group" "api" {
   }
 }
 
-#IAM
+#IAM role for lambda functions
+resource "aws_iam_role" "lambda" {
+  name = "${var.project_name}-lambda-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name = "${var.project_name}-lambda-role"
+    Environment = var.environment
+  }
+}
+
 #CloudWatch Logs policy
 resource "aws_iam_policy" "lambda_logs" {
   name        = "${var.project_name}-${var.environment}-lambda-logs"
@@ -238,7 +237,7 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc" {
   policy_arn = aws_iam_policy.lambda_vpc[0].arn
 }
 
-# Basic Lambda execution role (includes CloudWatch permissions)
+# Basic Lambda execution role
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
   role       = aws_iam_role.lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"

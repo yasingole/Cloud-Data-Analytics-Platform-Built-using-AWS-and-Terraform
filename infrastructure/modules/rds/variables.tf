@@ -78,7 +78,7 @@ variable "skip_final_snapshot" {
 }
 
 variable "deletion_protection" {
-  description = "Whether to enable deletion protection"
+  description = "Bool to enable deletion protection"
   type        = bool
   default     = true
 }

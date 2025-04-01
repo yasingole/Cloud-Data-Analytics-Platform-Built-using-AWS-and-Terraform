@@ -39,6 +39,21 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "processed_data" {
   }
 }
 
+#Enable versioning for both raw and processed bucket
+resource "aws_s3_bucket_versioning" "raw_data" {
+  bucket = aws_s3_bucket.raw_data.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "processed_data" {
+  bucket = aws_s3_bucket.processed_data.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 #Website bucket
 resource "aws_s3_bucket" "website" {
   bucket = "${var.project_name}-website-${var.environment}-${random_string.suffix.result}"
@@ -59,20 +74,6 @@ resource "aws_s3_bucket_website_configuration" "website" {
 
   error_document {
     key = "error.html"
-  }
-}
-
-#Enable versioning for both raw and processed bucket
-resource "aws_s3_bucket_versioning" "raw_data" {
-  bucket = aws_s3_bucket.raw_data.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-resource "aws_s3_bucket_versioning" "processed_data" {
-  bucket = aws_s3_bucket.processed_data.id
-  versioning_configuration {
-    status = "Enabled"
   }
 }
 

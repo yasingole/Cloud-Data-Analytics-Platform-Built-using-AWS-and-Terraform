@@ -53,9 +53,6 @@ resource "aws_iam_instance_profile" "ec2" {
   role = aws_iam_role.ec2.name
 }
 
-
-#Need to consider iam for s3 access, SSM, cloudwatch,
-
 #Data for amazon linux 2
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}

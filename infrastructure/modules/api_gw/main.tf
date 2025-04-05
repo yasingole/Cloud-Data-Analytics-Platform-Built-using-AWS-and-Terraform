@@ -25,22 +25,6 @@ resource "aws_api_gateway_resource" "summary" {
   path_part   = "summary"
 }
 
-# ------------------------------
-# Additional Resources can be added here
-# For example:
-# resource "aws_api_gateway_resource" "age_prevalence" {
-#   rest_api_id = aws_api_gateway_rest_api.main.id
-#   parent_id   = aws_api_gateway_resource.api.id
-#   path_part   = "age-prevalence"
-# }
-#
-# resource "aws_api_gateway_resource" "bmi_prevalence" {
-#   rest_api_id = aws_api_gateway_rest_api.main.id
-#   parent_id   = aws_api_gateway_resource.api.id
-#   path_part   = "bmi-prevalence"
-# }
-# ------------------------------
-
 # Methods and Integrations
 
 # Summary endpoint
@@ -59,26 +43,6 @@ resource "aws_api_gateway_integration" "summary" {
   type                    = "AWS_PROXY"
   uri                     = var.lambda_invoke_arn
 }
-
-# ------------------------------
-# Additional methods and integrations can be added here
-# For example:
-# resource "aws_api_gateway_method" "age_prevalence" {
-#   rest_api_id   = aws_api_gateway_rest_api.main.id
-#   resource_id   = aws_api_gateway_resource.age_prevalence.id
-#   http_method   = "GET"
-#   authorization = "NONE"
-# }
-#
-# resource "aws_api_gateway_integration" "age_prevalence" {
-#   rest_api_id             = aws_api_gateway_rest_api.main.id
-#   resource_id             = aws_api_gateway_resource.age_prevalence.id
-#   http_method             = aws_api_gateway_method.age_prevalence.http_method
-#   integration_http_method = "POST"
-#   type                    = "AWS_PROXY"
-#   uri                     = var.lambda_invoke_arn
-# }
-# ------------------------------
 
 # CORS Configuration
 
@@ -128,19 +92,6 @@ resource "aws_api_gateway_integration_response" "summary_options" {
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
-
-# ------------------------------
-# Additional CORS configurations can be added here for new endpoints
-# For example:
-# resource "aws_api_gateway_method" "age_prevalence_options" {
-#   rest_api_id   = aws_api_gateway_rest_api.main.id
-#   resource_id   = aws_api_gateway_resource.age_prevalence.id
-#   http_method   = "OPTIONS"
-#   authorization = "NONE"
-# }
-#
-# ... [integration, method_response, integration_response for age_prevalence]
-# ------------------------------
 
 # Deployment and Stage
 resource "aws_api_gateway_deployment" "main" {
@@ -237,7 +188,6 @@ resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
     ]
   })
 }
-# Add to infrastructure/modules/api_gw/main.tf
 
 # Lambda invocation permission for API Gateway
 resource "aws_lambda_permission" "api_gateway" {
